@@ -16,32 +16,46 @@ A modern, full-featured Learning Management System built with **Laravel 13**, **
 
 ---
 
-## 🚀 Installation
-
+1. **Clone the repository** to your local machine and navigate into the project directory:
 ```bash
-# 1. Clone the repository
 git clone https://github.com/Mina-Emad234/Mina-LMS.git
 cd Mina-LMS
+```
 
-# 2. Install PHP dependencies
+2. **Install PHP dependencies** using Composer. This will install Laravel and all required backend packages:
+```bash
 composer install
+```
 
-# 3. Install JS dependencies
+3. **Install JavaScript dependencies** using NPM. This is required for the frontend and Filament assets:
+```bash
 npm install
+```
 
-# 4. Copy the environment file
+4. **Copy the environment files**. You need a `.env` for the main application and a `.env.test` for running the Pest test suite:
+```bash
 cp .env.example .env
+cp .env.example .env.test
+```
 
-# 5. Generate the application key
+5. **Generate the application keys** for both your development and testing environments:
+```bash
 php artisan key:generate
+php artisan key:generate --env=test
+```
 
-# 6. Run migrations and seed the database
+6. **Run migrations and seed the database**. This will create the table structure and populate it with categories, levels, and the admin user:
+```bash
 php artisan migrate --seed
+```
 
-# 7. Build frontend assets
+7. **Build frontend assets**. This compiles the CSS and JS for production-like performance:
+```bash
 npm run build
+```
 
-# 8. Start the development server
+8. **Start the development server**. Once running, you can access the LMS at `http://localhost:8000`:
+```bash
 php artisan serve
 ```
 
