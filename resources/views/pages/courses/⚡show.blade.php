@@ -4,15 +4,22 @@ use App\Models\Course;
 use App\Models\Enrolement;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
+use App\Models\CourseRating;
 
 new #[Layout('layouts.app', ['class', 'bg-surface font-body text-on-surface'])] class extends Component {
     public Course $course;
 
     public $enrolemntModal = false;
+    public $ratingModal = false;
+    public $userRating = 0;
 
     public function mount($course)
     {
         $this->course = $course;
+        if (auth()->check()) {
+            $rating = $this->course->ratings()->where('user_id', auth()->id())->first();
+            $this->userRating = $rating ? $rating->rating : 0;
+        }
     }
 
     public function openLesson($slug)
@@ -29,6 +36,32 @@ new #[Layout('layouts.app', ['class', 'bg-surface font-body text-on-surface'])] 
     {
         $this->enrolemntModal = !$this->enrolemntModal;
     }
+
+    public function toggleRatingModal()
+    {
+        $this->ratingModal = !$this->ratingModal;
+    }
+
+    public function getIsRatingProperty()
+    {
+        return $this->course->checkEnrolement(auth()->id()) && !$this->course->checkRating(auth()->id());
+    }
+
+    public function setRating($rating)
+    {
+        $this->userRating = $rating;
+        CourseRating::updateOrCreate(
+            [
+                'user_id' => auth()->id(),
+                'course_id' => $this->course->id,
+            ],
+            [
+                'rating' => $this->userRating,
+            ],
+        );
+        $this->ratingModal = false;
+    }
+    
 
     public function enrollCourse()
     {
@@ -145,10 +178,10 @@ new #[Layout('layouts.app', ['class', 'bg-surface font-body text-on-surface'])] 
                                     <span class="material-symbols-outlined">workspace_premium</span>
                                     Download Certificate
                                 </button>
-                                <button wire:click="reviewCourse"
+                                <button wire:click="toggleRatingModal"
                                     class="w-full bg-primary/10 text-primary py-4 rounded-xl font-bold text-lg mb-8 hover:bg-primary/20 transition-all flex items-center justify-center gap-2">
                                     <span class="material-symbols-outlined">rate_review</span>
-                                    Review Course
+                                    {{ $userRating > 0 ? 'Update Rating' : 'Rate Course' }}
                                 </button>
                             @elseif ($course->isEnrolled(auth()->id()))
                                 <div wire:poll.10s class="mb-6">
@@ -180,6 +213,11 @@ new #[Layout('layouts.app', ['class', 'bg-surface font-body text-on-surface'])] 
                                     class="w-full bg-primary-container text-white py-4 rounded-xl font-bold text-lg mb-4 hover:opacity-90 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
                                     <span class="material-symbols-outlined">play_arrow</span>
                                     Resume Learning
+                                </button>
+                                <button wire:click="toggleRatingModal"
+                                    class="w-full bg-secondary/10 text-secondary py-4 rounded-xl font-bold text-lg mb-4 hover:bg-secondary/20 transition-all flex items-center justify-center gap-2">
+                                    <span class="material-symbols-outlined">star</span>
+                                    {{ $userRating > 0 ? 'Update Rating' : 'Rate Course' }}
                                 </button>
                             @else
                                 <button wire:click="toggleEnrollmentModal"
@@ -392,6 +430,55 @@ new #[Layout('layouts.app', ['class', 'bg-surface font-body text-on-surface'])] 
                         <button wire:click="toggleEnrollmentModal"
                             class="w-full bg-surface-container-high text-on-surface py-4 rounded-2xl font-bold text-lg hover:bg-surface-container-highest transition-all active:scale-[0.98]">
                             Not Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if ($ratingModal)
+        <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6" x-data="{ hover: 0 }">
+            <!-- Backdrop -->
+            <div wire:click="toggleRatingModal" x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                class="absolute inset-0 bg-slate-900/60 backdrop-blur-md"></div>
+
+            <!-- Modal Card -->
+            <div x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 translate-y-4 scale-95"
+                x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                class="relative bg-surface-container-lowest w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden">
+                
+                <div class="p-8 text-center">
+                    <div class="w-20 h-20 bg-secondary/10 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                        <span class="material-symbols-outlined text-secondary text-4xl" style="font-variation-settings: 'FILL' 1;">star</span>
+                    </div>
+                    
+                    <h3 class="text-on-surface font-headline text-2xl font-bold mb-2">Rate this Course</h3>
+                    <p class="text-on-surface-variant text-sm mb-8">How would you rate your learning experience?</p>
+                    
+                    <div class="flex justify-center gap-2 mb-10">
+                        <template x-for="i in 5">
+                            <button 
+                                @click="$wire.setRating(i)"
+                                @mouseenter="hover = i"
+                                @mouseleave="hover = 0"
+                                class="transition-all duration-200 transform hover:scale-125 focus:outline-none"
+                            >
+                                <span 
+                                    class="material-symbols-outlined text-4xl"
+                                    :style="(hover >= i || ($wire.userRating >= i && hover === 0)) ? 'font-variation-settings: \'FILL\' 1;' : ''"
+                                    :class="(hover >= i || ($wire.userRating >= i && hover === 0)) ? 'text-secondary' : 'text-outline-variant'"
+                                >star</span>
+                            </button>
+                        </template>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button wire:click="toggleRatingModal"
+                            class="flex-1 bg-surface-container-high text-on-surface py-4 rounded-2xl font-bold hover:bg-surface-container-highest transition-all active:scale-[0.98]">
+                            Cancel
                         </button>
                     </div>
                 </div>

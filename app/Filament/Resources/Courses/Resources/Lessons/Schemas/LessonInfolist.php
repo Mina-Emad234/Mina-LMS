@@ -31,11 +31,12 @@ class LessonInfolist
                     ->dateTime()
                     ->placeholder('-'),
                 MediaAction::make('video_url')
-                    ->label('Watch Video')
+                    ->hiddenLabel()
+                    ->media(fn ($record) => $record->video_url)
+                    ->url(fn ($record) => getAdminVideoUrl($record->video_id, $record->video_type))
+                    ->tooltip('Watch Video')
                     ->color('info')
                     ->icon('heroicon-o-video-camera')
-                    ->media(fn ($record) => $record->video_url),
-
             ]);
     }
 }

@@ -72,7 +72,7 @@ new #[Layout('layouts.app', ['class', 'bg-surface font-body text-on-surface'])] 
                             if (this.player) this.player.destroy();
                         }
                     }" wire:ignore id="player" class="plyr__video-embed relative aspect-video rounded-[2rem] overflow-hidden bg-surface-container-highest shadow-2xl group">
-                        <iframe src="{{ $this->lesson->video_url }}"
+                        <iframe src="{{ getVideoUrl($this->lesson->video_id, $this->lesson->video_type) }}"
                             allowfullscreen allowtransparency allow="autoplay"></iframe>
                     </div>
                     <!-- Navigation & Action Bar -->

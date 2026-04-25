@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->text('learnings')->nullable();
-            $table->string('video_url')->nullable();
+            $table->string('video_id')->nullable();
+            $table->string('video_type')->nullable();
             $table->string('duration')->nullable();
             $table->boolean('is_published')->default(false);
             $table->integer('order')->default(0);

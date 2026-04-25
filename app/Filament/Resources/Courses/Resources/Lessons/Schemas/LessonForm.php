@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Courses\Resources\Lessons\Schemas;
 
+use App\Enums\VideoTypeEnum;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -33,10 +35,12 @@ class LessonForm
                 Textarea::make('learnings')
                     ->maxLength(2000)
                     ->columnSpanFull(),
-                TextInput::make('video_url')
+                TextInput::make('video_id')
                     ->maxLength(2000)
-                    ->required()
-                    ->url(),
+                    ->required(),
+                Select::make('video_type')
+                    ->options(VideoTypeEnum::class)
+                    ->required(),
                 TextInput::make('duration')
                     ->maxLength(255)
                     ->label(__('Duration (in minutes)'))

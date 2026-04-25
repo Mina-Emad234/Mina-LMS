@@ -87,6 +87,11 @@ class Course extends Model implements HasMedia
         return $this->enrolements()->where('user_id', $userId)->exists();
     }
 
+    public function checkRating($userId)
+    {
+        return $this->ratings()->where('user_id', $userId)->exists();
+    }
+
     public function isCompleted($userId)
     {
         return $this->enrolements()->where('user_id', $userId)->where('is_completed', true)->exists();

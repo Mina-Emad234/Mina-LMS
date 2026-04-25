@@ -39,7 +39,7 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->type == UserTypeEnum::ADMIN->value;
+        return $this->type->value == UserTypeEnum::ADMIN->value;
     }
 
     public function getProfileAttribute(): ?string

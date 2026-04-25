@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\VideoTypeEnum;
 use App\Observers\ProgressObserver;
 use Illuminate\Database\Eloquent\Attributes\Appends;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['title', 'slug', 'description', 'learnings', 'video_url', 'duration', 'is_published', 'order', 'course_id', 'course_section_id'])]
+#[Fillable(['title', 'slug', 'description', 'learnings', 'video_id', 'video_type', 'duration', 'is_published', 'order', 'course_id', 'course_section_id'])]
 #[Appends(['period'])]
 #[ObservedBy(ProgressObserver::class)]
 class Lesson extends Model
@@ -29,6 +30,7 @@ class Lesson extends Model
         'is_published' => 'boolean',
         'order' => 'integer',
         'duration' => 'integer',
+        'video_type' => VideoTypeEnum::class,
     ];
 
     public function course()

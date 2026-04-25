@@ -20,7 +20,7 @@ class ProgressObserver
     /**
      * Handle the Progress "updated" event.
      */
-    public function updated(Progress $progress): void
+    public function updated($progress): void
     {
         //
     }
@@ -28,7 +28,7 @@ class ProgressObserver
     /**
      * Handle the Progress "deleted" event.
      */
-    public function deleted(Progress $progress): void
+    public function deleted($progress): void
     {
         //
     }
@@ -36,7 +36,7 @@ class ProgressObserver
     /**
      * Handle the Progress "restored" event.
      */
-    public function restored(Progress $progress): void
+    public function restored($progress): void
     {
         //
     }
@@ -44,7 +44,7 @@ class ProgressObserver
     /**
      * Handle the Progress "force deleted" event.
      */
-    public function forceDeleted(Progress $progress): void
+    public function forceDeleted($progress): void
     {
         //
     }
