@@ -73,9 +73,7 @@ if (! function_exists('getVideoUrl')) {
     /**
      * Get video URL from ID and type.
      *
-     * @param  string|null  $videoId
      * @param  string|null  $videoType
-     * @return string|null
      */
     function getVideoUrl(?string $videoId, VideoTypeEnum|string|null $videoType): ?string
     {
@@ -84,8 +82,8 @@ if (! function_exists('getVideoUrl')) {
         }
 
         $type = $videoType instanceof VideoTypeEnum ? $videoType->value : $videoType;
-    
-    return match ($type) {
+
+        return match ($type) {
             VideoTypeEnum::Youtube->value => 'https://www.youtube.com/embed/'.$videoId.'?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1',
             VideoTypeEnum::Vimeo->value => 'https://player.vimeo.com/video/'.$videoId.'?loop=false&amp;byline=false&amp;portrait=false&amp;title=false&amp;speed=true&amp;transparent=0&amp;gesture=media',
             default => null,
@@ -97,9 +95,7 @@ if (! function_exists('getAdminVideoUrl')) {
     /**
      * Get video URL from ID and type.
      *
-     * @param  string|null  $videoId
      * @param  string|null  $videoType
-     * @return string|null
      */
     function getAdminVideoUrl(?string $videoId, VideoTypeEnum|string|null $videoType): ?string
     {

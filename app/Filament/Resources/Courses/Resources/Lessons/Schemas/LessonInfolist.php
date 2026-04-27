@@ -36,7 +36,7 @@ class LessonInfolist
                     ->url(fn ($record) => getAdminVideoUrl($record->video_id, $record->video_type))
                     ->tooltip('Watch Video')
                     ->color('info')
-                    ->icon('heroicon-o-video-camera')
+                    ->icon('heroicon-o-video-camera'),
             ]);
     }
 }
